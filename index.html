@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Unite - Guide Complet</title>
+    <style>
+        :root {
+            --primary: #ffcb05;
+            --secondary: #2a75bb;
+            --accent: #c7a008;
+            --dark: #3c5aa6;
+            --light: #f8f8f8;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light);
+            color: #333;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--secondary), var(--dark));
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .pokemon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .pokemon-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .pokemon-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .pokemon-header {
+            background-color: var(--primary);
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 3px solid var(--accent);
+        }
+        
+        .pokemon-body {
+            padding: 1rem;
+        }
+        
+        .role-tag {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+        
+        .attacker { background-color: #ff6b6b; }
+        .defender { background-color: #4ecdc4; }
+        .speedster { background-color: #a05195; }
+        .supporter { background-color: #ffa600; }
+        .all-rounder { background-color: #2eb872; }
+        .ranged { background-color: #6a0572; }
+        .melee { background-color: #1a936f; }
+        
+        .build-section {
+            margin-top: 1rem;
+            border-top: 1px dashed #ddd;
+            padding-top: 1rem;
+        }
+        
+        .search-bar {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--secondary);
+            border-radius: 30px;
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .pokemon-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Pokémon Unite - Guide Complet</h1>
+        <p>Tous les builds, médailles et objets tenus pour chaque Pokémon</p>
+        <input type="text" class="search-bar" placeholder="Rechercher un Pokémon...">
+        <div class="filter-container">
+            <button class="filter-btn" data-role="all">Tous</button>
+            <button class="filter-btn" data-role="attacker">Attaquant</button>
+            <button class="filter-btn" data-role="defender">Défenseur</button>
+            <button class="filter-btn" data-role="speedster">Speedster</button>
+            <button class="filter-btn" data-role="supporter">Support</button>
+            <button class="filter-btn" data-role="all-rounder">All-Rounder</button>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="pokemon-grid" id="pokemon-container">
+            <!-- Les Pokémon seront ajoutés dynamiquement via JavaScript -->
+        </div>
+    </div>
+    
+    <footer>
+        <p>Données compilées à partir de Unite-DB, UniteAPI et les meilleurs joueurs compétitifs</p>
+        <p>Dernière mise à jour: <span id="update-date">15/11/2023</span></p>
+    </footer>
+    
+    <script>
+        // Données des Pokémon
+        const pokemonData = [
+            {
+                name: "Absol",
+                roles: ["speedster"],
+                range: "melee",
+                build: {
+                    moves: ["Poursuite", "Colère"],
+                    battleItem: "Frappe Éclair",
+                    heldItems: ["Lame de Roc", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Focus sur l'early game. Poursuite pour les déplacements et executions. Timing important sur la Frappe Éclair."
+            },
+            {
+                name: "Aegislash",
+                roles: ["all-rounder"],
+                range: "melee",
+                build: {
+                    moves: ["Lame Ombre", "Bouclier Royal"],
+                    battleItem: "Frappe Éclair",
+                    heldItems: ["Focus Band", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Alterner entre forme Attaque et Défense selon la situation. Bouclier Royal pour les teamfights."
+            },
+            {
+                name: "Azumarill",
+                roles: ["all-rounder"],
+                range: "melee",
+                build: {
+                    moves: ["Aqua-Jet", "Tourbillon"],
+                    battleItem: "Eau Royale",
+                    heldItems: ["Focus Band", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Utiliser Aqua-Jet pour engager ou fuir. Tourbillon pour le AoE en teamfight."
+            },
+            {
+                name: "Blastoise",
+                roles: ["defender"],
+                range: "ranged",
+                build: {
+                    moves: ["Canon à O", "Hydro-Tornade"],
+                    battleItem: "Frappe Éclair",
+                    heldItems: ["Focus Band", "Veste Pare-Balles", "Oreiller Douillet"],
+                    emblems: "6 Blanc (HP) + 4 Bleu (Déf. Spé)"
+                },
+                tips: "Priorité au contrôle de zone. Hydro-Tornade pour perturber les teamfights."
+            },
+            {
+                name: "Blissey",
+                roles: ["supporter"],
+                range: "ranged",
+                build: {
+                    moves: ["Soin", "Oeuf Surprise"],
+                    battleItem: "Sprint",
+                    heldItems: ["Exp. Share", "Focus Band", "Oreiller Douillet"],
+                    emblems: "6 Blanc (HP) + 4 Vert (Cooldown)"
+                },
+                tips: "Restez avec vos carries. Soin pour maintenir l'équipe en vie."
+            },
+            {
+                name: "Buzzwole",
+                roles: ["all-rounder"],
+                range: "melee",
+                build: {
+                    moves: ["Flexibilite", "Superpower"],
+                    battleItem: "Frappe Éclair",
+                    heldItems: ["Focus Band", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Stackez vos attaques avant d'engager. Superpower pour isoler les cibles."
+            },
+            {
+                name: "Charizard",
+                roles: ["all-rounder"],
+                range: "ranged",
+                build: {
+                    moves: ["Dracosouffle", "Lame de Roc"],
+                    battleItem: "Frappe X",
+                    heldItems: ["Focus Band", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Farmez jusqu'au level 9. Ultime très fort pour les teamfights."
+            },
+            {
+                name: "Cinderace",
+                roles: ["attacker"],
+                range: "ranged",
+                build: {
+                    moves: ["Flamèche", "Pyroball"],
+                    battleItem: "Frappe X",
+                    heldItems: ["Lame de Roc", "Glaive Étendue", "Scope Lens"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Positionnement crucial. Pyroball pour le burst damage."
+            },
+            {
+                name: "Clefable",
+                roles: ["supporter"],
+                range: "ranged",
+                build: {
+                    moves: ["Gravité", "Claque Lune"],
+                    battleItem: "Sprint",
+                    heldItems: ["Exp. Share", "Focus Band", "Oreiller Douillet"],
+                    emblems: "6 Blanc (HP) + 4 Vert (Cooldown)"
+                },
+                tips: "Gravité pour contrer les dashs. Claque Lune pour le heal."
+            },
+            {
+                name: "Comfey",
+                roles: ["supporter"],
+                range: "ranged",
+                build: {
+                    moves: ["Floraisons Magiques", "Douce Fleur"],
+                    battleItem: "Sprint",
+                    heldItems: ["Exp. Share", "Focus Band", "Oreiller Douillet"],
+                    emblems: "6 Blanc (HP) + 4 Vert (Cooldown)"
+                },
+                tips: "Restez attaché à votre carry. Timing des heals important."
+            },
+            {
+                name: "Cramorant",
+                roles: ["attacker"],
+                range: "ranged",
+                build: {
+                    moves: ["Plongée", "Jet de Vague"],
+                    battleItem: "Eau Royale",
+                    heldItems: ["Choice Specs", "Sp. Atk Specs", "Focus Band"],
+                    emblems: "6 Vert (Sp. ATK) + 4 Blanc (Cooldown)"
+                },
+                tips: "Kite avec Plongée. Jet de Vague pour le poke."
+            },
+            {
+                name: "Crustle",
+                roles: ["defender"],
+                range: "melee",
+                build: {
+                    moves: ["Fracass'Roc", "Barrière Rocheuse"],
+                    battleItem: "Frappe Éclair",
+                    heldItems: ["Focus Band", "Veste Pare-Balles", "Oreiller Douillet"],
+                    emblems: "6 Blanc (HP) + 4 Bleu (Déf. Spé)"
+                },
+                tips: "Barrière pour bloquer les chemins. Fracass'Roc pour le stun."
+            },
+            {
+                name: "Decidueye",
+                roles: ["attacker"],
+                range: "ranged",
+                build: {
+                    moves: ["Tir des Ombres", "Tempête de Plumes"],
+                    battleItem: "Frappe X",
+                    heldItems: ["Lame de Roc", "Scope Lens", "Glaive Étendue"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Positionnement ultra important. Ultime pour les teamfights."
+            },
+            {
+                name: "Delphox",
+                roles: ["attacker"],
+                range: "ranged",
+                build: {
+                    moves: ["Feu Ensorcelé", "Flamme Mystique"],
+                    battleItem: "Eau Royale",
+                    heldItems: ["Choice Specs", "Sp. Atk Specs", "Focus Band"],
+                    emblems: "6 Vert (Sp. ATK) + 4 Blanc (Cooldown)"
+                },
+                tips: "Feu Ensorcelé pour le poke. Flamme Mystique pour les zones."
+            },
+            {
+                name: "Dodrio",
+                roles: ["speedster"],
+                range: "melee",
+                build: {
+                    moves: ["Coup d'Bec", "Triple Finish"],
+                    battleItem: "Frappe Éclair",
+                    heldItems: ["Lame de Roc", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Utiliser la mobilité pour farm et ganker. Triple Finish pour les executions."
+            },
+            {
+                name: "Dragapult",
+                roles: ["attacker"],
+                range: "ranged",
+                build: {
+                    moves: ["Dracochoc", "Dracocharge"],
+                    battleItem: "Frappe X",
+                    heldItems: ["Lame de Roc", "Glaive Étendue", "Scope Lens"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Dracochoc pour le poke. Dracocharge pour engager ou fuir."
+            },
+            {
+                name: "Dragonite",
+                roles: ["all-rounder"],
+                range: "melee",
+                build: {
+                    moves: ["Draco Meteor", "Hyper Beam"],
+                    battleItem: "Frappe X",
+                    heldItems: ["Focus Band", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Hyper Beam pour les objectifs. Draco Meteor pour le AoE."
+            },
+            {
+                name: "Duraludon",
+                roles: ["attacker"],
+                range: "ranged",
+                build: {
+                    moves: ["Laser Auto", "Canon Revolving"],
+                    battleItem: "Frappe X",
+                    heldItems: ["Lame de Roc", "Scope Lens", "Glaive Étendue"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Positionnement derrière les tanks. Canon Revolving pour le DPS soutenu."
+            },
+            {
+                name: "Eldegoss",
+                roles: ["supporter"],
+                range: "ranged",
+                build: {
+                    moves: ["Danse-Fleur", "Soin Pollen"],
+                    battleItem: "Sprint",
+                    heldItems: ["Exp. Share", "Focus Band", "Oreiller Douillet"],
+                    emblems: "6 Blanc (HP) + 4 Vert (Cooldown)"
+                },
+                tips: "Soin Pollen pour le sustain. Danse-Fleur pour le slow."
+            },
+            {
+                name: "Espeon",
+                roles: ["attacker"],
+                range: "ranged",
+                build: {
+                    moves: ["Psyko", "Prélèvement"],
+                    battleItem: "Eau Royale",
+                    heldItems: ["Choice Specs", "Sp. Atk Specs", "Focus Band"],
+                    emblems: "6 Vert (Sp. ATK) + 4 Blanc (Cooldown)"
+                },
+                tips: "Psyko pour le burst. Prélèvement pour le heal et dégâts."
+            },
+            {
+                name: "Garchomp",
+                roles: ["all-rounder"],
+                range: "melee",
+                build: {
+                    moves: ["Draco-Charge", "Tunnelier"],
+                    battleItem: "Frappe X",
+                    heldItems: ["Focus Band", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Farmez jusqu'au level 9. Stackez vos attaques avant d'engager."
+            },
+            {
+                name: "Gardevoir",
+                roles: ["attacker"],
+                range: "ranged",
+                build: {
+                    moves: ["Psyko", "Choc Mental"],
+                    battleItem: "Eau Royale",
+                    heldItems: ["Choice Specs", "Sp. Atk Specs", "Focus Band"],
+                    emblems: "6 Vert (Sp. ATK) + 4 Blanc (Cooldown)"
+                },
+                tips: "Positionnement crucial. Psyko pour le burst damage."
+            },
+            {
+                name: "Gengar",
+                roles: ["speedster"],
+                range: "ranged",
+                build: {
+                    moves: ["Ball'Ombre", "Vent Néfaste"],
+                    battleItem: "Frappe Éclair",
+                    heldItems: ["Choice Specs", "Sp. Atk Specs", "Focus Band"],
+                    emblems: "6 Vert (Sp. ATK) + 4 Blanc (Cooldown)"
+                },
+                tips: "Ball'Ombre pour le burst. Vent Néfaste pour le reset."
+            },
+            {
+                name: "Glaceon",
+                roles: ["attacker"],
+                range: "ranged",
+                build: {
+                    moves: ["Cryo-Laser", "Glaciation"],
+                    battleItem: "Eau Royale",
+                    heldItems: ["Choice Specs", "Sp. Atk Specs", "Focus Band"],
+                    emblems: "6 Vert (Sp. ATK) + 4 Blanc (Cooldown)"
+                },
+                tips: "Cryo-Laser pour le poke. Glaciation pour le burst."
+            },
+            {
+                name: "Goodra",
+                roles: ["defender"],
+                range: "ranged",
+                build: {
+                    moves: ["Draco-Souffle", "Acide"],
+                    battleItem: "Frappe Éclair",
+                    heldItems: ["Focus Band", "Veste Pare-Balles", "Oreiller Douillet"],
+                    emblems: "6 Blanc (HP) + 4 Bleu (Déf. Spé)"
+                },
+                tips: "Draco-Souffle pour le heal. Acide pour le slow."
+            },
+            {
+                name: "Greedent",
+                roles: ["defender"],
+                range: "melee",
+                build: {
+                    moves: ["Covet", "Bullet Seed"],
+                    battleItem: "Frappe Éclair",
+                    heldItems: ["Focus Band", "Veste Pare-Balles", "Oreiller Douillet"],
+                    emblems: "6 Blanc (HP) + 4 Bleu (Déf. Spé)"
+                },
+                tips: "Perturbez les ennemis avec Covet. Bullet Seed pour le sustain."
+            },
+            {
+                name: "Greninja",
+                roles: ["attacker"],
+                range: "ranged",
+                build: {
+                    moves: ["Shuriken", "Surf"],
+                    battleItem: "Eau Royale",
+                    heldItems: ["Lame de Roc", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Shuriken pour le poke. Surf pour les executions."
+            },
+            {
+                name: "Gyarados",
+                roles: ["all-rounder"],
+                range: "melee",
+                build: {
+                    moves: ["Cascade", "Hydroqueue"],
+                    battleItem: "Frappe X",
+                    heldItems: ["Focus Band", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Farmez jusqu'au level 9. Hydroqueue pour le AoE en teamfight."
+            },
+            {
+                name: "Hoopa",
+                roles: ["supporter"],
+                range: "ranged",
+                build: {
+                    moves: ["Porte Dimension", "Trou Noir"],
+                    battleItem: "Sprint",
+                    heldItems: ["Exp. Share", "Focus Band", "Oreiller Douillet"],
+                    emblems: "6 Blanc (HP) + 4 Vert (Cooldown)"
+                },
+                tips: "Porte Dimension pour les rotations. Trou Noir pour le contrôle."
+            },
+            {
+                name: "Inteleon",
+                roles: ["attacker"],
+                range: "ranged",
+                build: {
+                    moves: ["Snipe Shot", "Liquidation"],
+                    battleItem: "Frappe X",
+                    heldItems: ["Lame de Roc", "Scope Lens", "Glaive Étendue"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Snipe Shot pour le poke longue distance. Liquidation pour le burst."
+            },
+            {
+                name: "Lapras",
+                roles: ["defender"],
+                range: "ranged",
+                build: {
+                    moves: ["Chant Antique", "Vague Boréale"],
+                    battleItem: "Frappe Éclair",
+                    heldItems: ["Focus Band", "Veste Pare-Balles", "Oreiller Douillet"],
+                    emblems: "6 Blanc (HP) + 4 Bleu (Déf. Spé)"
+                },
+                tips: "Chant Antique pour le contrôle. Vague Boréale pour le AoE."
+            },
+            {
+                name: "Leafeon",
+                roles: ["speedster"],
+                range: "melee",
+                build: {
+                    moves: ["Lame Herbe", "Tranch'Herbe"],
+                    battleItem: "Frappe Éclair",
+                    heldItems: ["Lame de Roc", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Lame Herbe pour le burst. Tranch'Herbe pour les déplacements."
+            },
+            {
+                name: "Lucario",
+                roles: ["all-rounder"],
+                range: "melee",
+                build: {
+                    moves: ["Poing Ombre", "Extreme Speed"],
+                    battleItem: "Frappe X",
+                    heldItems: ["Focus Band", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Extreme Speed pour les déplacements. Poing Ombre pour le burst."
+            },
+            {
+                name: "Machamp",
+                roles: ["all-rounder"],
+                range: "melee",
+                build: {
+                    moves: ["Poing Ombre", "Poing de Feu"],
+                    battleItem: "Frappe X",
+                    heldItems: ["Focus Band", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Poing de Feu pour le AoE. Poing Ombre pour le burst."
+            },
+            {
+                name: "Mamoswine",
+                roles: ["defender"],
+                range: "melee",
+                build: {
+                    moves: ["Coud'Glace", "Seisme"],
+                    battleItem: "Frappe Éclair",
+                    heldItems: ["Focus Band", "Veste Pare-Balles", "Oreiller Douillet"],
+                    emblems: "6 Blanc (HP) + 4 Bleu (Déf. Spé)"
+                },
+                tips: "Coud'Glace pour le contrôle. Seisme pour le AoE."
+            },
+            {
+                name: "Meowscarada",
+                roles: ["speedster"],
+                range: "melee",
+                build: {
+                    moves: ["Tranch'Herbe", "Lame Florale"],
+                    battleItem: "Frappe Éclair",
+                    heldItems: ["Lame de Roc", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Tranch'Herbe pour les déplacements. Lame Florale pour le burst."
+            },
+            {
+                name: "Metagross",
+                roles: ["all-rounder"],
+                range: "melee",
+                build: {
+                    moves: ["Meteor Mash", "Flash Cannon"],
+                    battleItem: "Frappe X",
+                    heldItems: ["Focus Band", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Meteor Mash pour le contrôle. Flash Cannon pour le AoE."
+            },
+            {
+                name: "Mew",
+                roles: ["attacker"],
+                range: "ranged",
+                build: {
+                    moves: ["Solar Beam", "Electroweb"],
+                    battleItem: "Eau Royale",
+                    heldItems: ["Choice Specs", "Sp. Atk Specs", "Focus Band"],
+                    emblems: "6 Vert (Sp. ATK) + 4 Blanc (Cooldown)"
+                },
+                tips: "Solar Beam pour le poke. Electroweb pour le contrôle."
+            },
+            {
+                name: "Mewtwo X",
+                roles: ["all-rounder"],
+                range: "melee",
+                build: {
+                    moves: ["Psycho Cut", "Bulk Up"],
+                    battleItem: "Frappe X",
+                    heldItems: ["Focus Band", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Psycho Cut pour le burst. Bulk Up pour le sustain."
+            },
+            {
+                name: "Mewtwo Y",
+                roles: ["attacker"],
+                range: "ranged",
+                build: {
+                    moves: ["Psystrike", "Recover"],
+                    battleItem: "Eau Royale",
+                    heldItems: ["Choice Specs", "Sp. Atk Specs", "Focus Band"],
+                    emblems: "6 Vert (Sp. ATK) + 4 Blanc (Cooldown)"
+                },
+                tips: "Psystrike pour le burst. Recover pour le sustain."
+            },
+            {
+                name: "Mimikyu",
+                roles: ["all-rounder"],
+                range: "melee",
+                build: {
+                    moves: ["Play Rough", "Shadow Claw"],
+                    battleItem: "Frappe X",
+                    heldItems: ["Focus Band", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Play Rough pour le contrôle. Shadow Claw pour le burst."
+            },
+            {
+                name: "Mr. Mime",
+                roles: ["supporter"],
+                range: "melee",
+                build: {
+                    moves: ["Barrière", "Soin Confus"],
+                    battleItem: "Sprint",
+                    heldItems: ["Exp. Share", "Focus Band", "Oreiller Douillet"],
+                    emblems: "6 Blanc (HP) + 4 Vert (Cooldown)"
+                },
+                tips: "Barrière pour le contrôle. Soin Confus pour le heal."
+            },
+            {
+                name: "Ninetales",
+                roles: ["attacker"],
+                range: "ranged",
+                build: {
+                    moves: ["Vent Glace", "Avalanche"],
+                    battleItem: "Eau Royale",
+                    heldItems: ["Choice Specs", "Sp. Atk Specs", "Focus Band"],
+                    emblems: "6 Vert (Sp. ATK) + 4 Blanc (Cooldown)"
+                },
+                tips: "Vent Glace pour le poke. Avalanche pour le contrôle."
+            },
+            {
+                name: "Pikachu",
+                roles: ["attacker"],
+                range: "ranged",
+                build: {
+                    moves: ["Electroball", "Tonnerre"],
+                    battleItem: "Eau Royale",
+                    heldItems: ["Choice Specs", "Sp. Atk Specs", "Focus Band"],
+                    emblems: "6 Vert (Sp. ATK) + 4 Blanc (Cooldown)"
+                },
+                tips: "Electroball pour le poke. Tonnerre pour le AoE."
+            },
+            {
+                name: "Sableye",
+                roles: ["supporter"],
+                range: "melee",
+                build: {
+                    moves: ["Confuse Ray", "Shadow Sneak"],
+                    battleItem: "Sprint",
+                    heldItems: ["Exp. Share", "Focus Band", "Oreiller Douillet"],
+                    emblems: "6 Blanc (HP) + 4 Vert (Cooldown)"
+                },
+                tips: "Confuse Ray pour perturber. Shadow Sneak pour la vision."
+            },
+            {
+                name: "Scizor",
+                roles: ["all-rounder"],
+                range: "melee",
+                build: {
+                    moves: ["Bullet Punch", "Swords Dance"],
+                    battleItem: "Frappe X",
+                    heldItems: ["Focus Band", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Bullet Punch pour le sustain. Swords Dance pour le buff."
+            },
+            {
+                name: "Scyther",
+                roles: ["speedster"],
+                range: "melee",
+                build: {
+                    moves: ["Double Hit", "Aerial Ace"],
+                    battleItem: "Frappe Éclair",
+                    heldItems: ["Lame de Roc", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Double Hit pour le burst. Aerial Ace pour les déplacements."
+            },
+            {
+                name: "Slowbro",
+                roles: ["defender"],
+                range: "ranged",
+                build: {
+                    moves: ["Surf", "Télékinésie"],
+                    battleItem: "Frappe Éclair",
+                    heldItems: ["Focus Band", "Veste Pare-Balles", "Oreiller Douillet"],
+                    emblems: "6 Blanc (HP) + 4 Bleu (Déf. Spé)"
+                },
+                tips: "Surf pour le contrôle. Télékinésie pour isoler les cibles."
+            },
+            {
+                name: "Snorlax",
+                roles: ["defender"],
+                range: "melee",
+                build: {
+                    moves: ["Coup d'Boule", "Barrière"],
+                    battleItem: "Frappe Éclair",
+                    heldItems: ["Focus Band", "Veste Pare-Balles", "Oreiller Douillet"],
+                    emblems: "6 Blanc (HP) + 4 Bleu (Déf. Spé)"
+                },
+                tips: "Barrière pour bloquer les chemins. Coup d'Boule pour le stun."
+            },
+            {
+                name: "Sylveon",
+                roles: ["attacker"],
+                range: "ranged",
+                build: {
+                    moves: ["Vox Obscuris", "Fée Choc"],
+                    battleItem: "Eau Royale",
+                    heldItems: ["Choice Specs", "Sp. Atk Specs", "Focus Band"],
+                    emblems: "6 Vert (Sp. ATK) + 4 Blanc (Cooldown)"
+                },
+                tips: "Vox Obscuris pour le poke. Fée Choc pour le burst."
+            },
+            {
+                name: "Talonflame",
+                roles: ["speedster"],
+                range: "melee",
+                build: {
+                    moves: ["Brave Bird", "Flare Blitz"],
+                    battleItem: "Frappe Éclair",
+                    heldItems: ["Lame de Roc", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Brave Bird pour engager. Flare Blitz pour les executions."
+            },
+            {
+                name: "Trevenant",
+                roles: ["defender"],
+                range: "melee",
+                build: {
+                    moves: ["Wood Hammer", "Curse"],
+                    battleItem: "Frappe Éclair",
+                    heldItems: ["Focus Band", "Veste Pare-Balles", "Oreiller Douillet"],
+                    emblems: "6 Blanc (HP) + 4 Bleu (Déf. Spé)"
+                },
+                tips: "Wood Hammer pour le contrôle. Curse pour le sustain."
+            },
+            {
+                name: "Tsareena",
+                roles: ["all-rounder"],
+                range: "melee",
+                build: {
+                    moves: ["Trop Kick", "Grassy Glide"],
+                    battleItem: "Frappe X",
+                    heldItems: ["Focus Band", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Trop Kick pour le AoE. Grassy Glide pour les déplacements."
+            },
+            {
+                name: "Tyranitar",
+                roles: ["all-rounder"],
+                range: "melee",
+                build: {
+                    moves: ["Dark Pulse", "Stone Edge"],
+                    battleItem: "Frappe X",
+                    heldItems: ["Focus Band", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Farmez jusqu'au level 9. Ultime très fort pour les teamfights."
+            },
+            {
+                name: "Umbreon",
+                roles: ["defender"],
+                range: "melee",
+                build: {
+                    moves: ["Foul Play", "Mean Look"],
+                    battleItem: "Frappe Éclair",
+                    heldItems: ["Focus Band", "Veste Pare-Balles", "Oreiller Douillet"],
+                    emblems: "6 Blanc (HP) + 4 Bleu (Déf. Spé)"
+                },
+                tips: "Foul Play pour le contre. Mean Look pour isoler les cibles."
+            },
+            {
+                name: "Urshifu",
+                roles: ["all-rounder"],
+                range: "melee",
+                build: {
+                    moves: ["Wicked Blow", "Surging Strikes"],
+                    battleItem: "Frappe X",
+                    heldItems: ["Focus Band", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Wicked Blow pour le burst. Surging Strikes pour le sustain."
+            },
+            {
+                name: "Venusaur",
+                roles: ["attacker"],
+                range: "ranged",
+                build: {
+                    moves: ["Solar Beam", "Giga Drain"],
+                    battleItem: "Eau Royale",
+                    heldItems: ["Choice Specs", "Sp. Atk Specs", "Focus Band"],
+                    emblems: "6 Vert (Sp. ATK) + 4 Blanc (Cooldown)"
+                },
+                tips: "Solar Beam pour le poke. Giga Drain pour le sustain."
+            },
+            {
+                name: "Wigglytuff",
+                roles: ["supporter"],
+                range: "melee",
+                build: {
+                    moves: ["Rollout", "Doux Parfum"],
+                    battleItem: "Sprint",
+                    heldItems: ["Exp. Share", "Focus Band", "Oreiller Douillet"],
+                    emblems: "6 Blanc (HP) + 4 Vert (Cooldown)"
+                },
+                tips: "Rollout pour le contrôle. Doux Parfum pour le AoE."
+            },
+            {
+                name: "Zacian",
+                roles: ["all-rounder"],
+                range: "melee",
+                build: {
+                    moves: ["Sacred Sword", "Agility"],
+                    battleItem: "Frappe X",
+                    heldItems: ["Focus Band", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Sacred Sword pour le burst. Agility pour les déplacements."
+            },
+            {
+                name: "Zeraora",
+                roles: ["speedster"],
+                range: "melee",
+                build: {
+                    moves: ["Discharge", "Volt Switch"],
+                    battleItem: "Frappe Éclair",
+                    heldItems: ["Lame de Roc", "Glaive Étendue", "Ceinture Muscle"],
+                    emblems: "6 Marron (ATK) + 4 Blanc (Vit. ATK)"
+                },
+                tips: "Discharge pour le AoE. Volt Switch pour les déplacements."
+            }
+        ];
+
+        // Fonction pour afficher les Pokémon
+        function displayPokemon(pokemonList) {
+            const container = document.getElementById('pokemon-container');
+            container.innerHTML = '';
+            
+            pokemonList.forEach(pokemon => {
+                const card = document.createElement('div');
+                card.className = 'pokemon-card';
+                
+                // Header
+                const header = document.createElement('div');
+                header.className = 'pokemon-header';
+                
+                const name = document.createElement('h2');
+                name.textContent = pokemon.name;
+                
+                const rolesContainer = document.createElement('div');
+                pokemon.roles.forEach(role => {
+                    const roleTag = document.createElement('span');
+                    roleTag.className = `role-tag ${role}`;
+                    roleTag.textContent = role === 'attacker' ? 'Attaquant' : 
+                                          role === 'defender' ? 'Défenseur' :
+                                          role === 'speedster' ? 'Speedster' :
+                                          role === 'supporter' ? 'Support' : 'All-Rounder';
+                    rolesContainer.appendChild(roleTag);
+                });
+                
+                const rangeTag = document.createElement('span');
+                rangeTag.className = `role-tag ${pokemon.range}`;
+                rangeTag.textContent = pokemon.range === 'ranged' ? 'Distance' : 'Mêlée';
+                rolesContainer.appendChild(rangeTag);
+                
+                header.appendChild(name);
+                header.appendChild(rolesContainer);
+                
+                // Body
+                const body = document.createElement('div');
+                body.className = 'pokemon-body';
+                
+                const buildTitle = document.createElement('h3');
+                buildTitle.textContent = 'Build Optimal';
+                
+                const moves = document.createElement('p');
+                moves.innerHTML = `<strong>Capacités:</strong> ${pokemon.build.moves.join(' / ')}`;
+                
+                const battleItem = document.createElement('p');
+                battleItem.innerHTML = `<strong>Objet de combat:</strong> ${pokemon.build.battleItem}`;
+                
+                // Held Items
+                const heldSection = document.createElement('div');
+                heldSection.className = 'build-section';
+                
+                const heldTitle = document.createElement('h3');
+                heldTitle.textContent = 'Objets tenus';
+                
+                const heldList = document.createElement('ul');
+                pokemon.build.heldItems.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    heldList.appendChild(li);
+                });
+                
+                heldSection.appendChild(heldTitle);
+                heldSection.appendChild(heldList);
+                
+                // Emblems
+                const emblemSection = document.createElement('div');
+                emblemSection.className = 'build-section';
+                
+                const emblemTitle = document.createElement('h3');
+                emblemTitle.textContent = 'Médailles recommandées';
+                
+                const emblemList = document.createElement('ul');
+                const emblemLi = document.createElement('li');
+                emblemLi.textContent = pokemon.build.emblems;
+                emblemList.appendChild(emblemLi);
+                
+                emblemSection.appendChild(emblemTitle);
+                emblemSection.appendChild(emblemList);
+                
+                // Tips
+                const tipsSection = document.createElement('div');
+                tipsSection.className = 'build-section';
+                
+                const tipsTitle = document.createElement('h3');
+                tipsTitle.textContent = 'Conseils de gameplay';
+                
+                const tips = document.createElement('p');
+                tips.textContent = pokemon.tips;
+                
+                tipsSection.appendChild(tipsTitle);
+                tipsSection.appendChild(tips);
+                
+                // Assemblage
+                body.appendChild(buildTitle);
+                body.appendChild(moves);
+                body.appendChild(battleItem);
+                body.appendChild(heldSection);
+                body.appendChild(emblemSection);
+                body.appendChild(tipsSection);
+                
+                card.appendChild(header);
+                card.appendChild(body);
+                
+                container.appendChild(card);
+            });
+        }
+
+        // Initial display
+        displayPokemon(pokemonData);
+
+        // Search functionality
+        document.querySelector('.search-bar').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const filtered = pokemonData.filter(pokemon => 
+                pokemon.name.toLowerCase().includes(searchTerm)
+            );
+            displayPokemon(filtered);
+        });
+
+        // Filter by role
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const role = this.dataset.role;
+                if (role === 'all') {
+                    displayPokemon(pokemonData);
+                } else {
+                    const filtered = pokemonData.filter(pokemon => 
+                        pokemon.roles.includes(role)
+                    );
+                    displayPokemon(filtered);
+                }
+            });
+        });
+
+        // Update date
+        document.getElementById('update-date').textContent = new Date().toLocaleDateString('fr-FR');
+    </script>
+</body>
+</html>
